@@ -1,0 +1,107 @@
+/* Mask Loading App */
+
+#loading-mask {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 20000;
+    background-color: #FFF;
+}
+.tooltipHelp {
+    position: fixed;
+}
+.tooltipHelp:hover:after {
+    background: #333;
+    background: rgba(0, 0, 0, .8);
+    border-radius: 5px;
+    bottom: 5px;
+    color: #fff;
+    content: attr(alt);
+    left: 20%;
+    padding: 5px 15px;
+    position: absolute;
+    z-index: 5;
+    width: 220px;
+}
+.tooltipHelp:hover:before {
+    border: solid;
+    border-color: #333 transparent;
+    border-left: 6px 6px 0 6px;
+}
+#loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    height: 90px;
+    margin-left: -190px;
+    margin-top: -45px;
+    z-index: 20001;
+}
+#loading .loading-indicator {
+    color: #444;
+    font: bold 13px tahoma, arial, helvetica;
+    padding: 10px;
+    margin: 0;
+    background-color: #FFF;
+}
+#loading-msg {
+    font: normal 10px arial, tahoma, sans-serif;
+    color: blue;
+}
+#text-msg {
+    font: italic 10px arial, tahoma, sans-serif;
+}
+/*
+ * Desktop
+ */
+
+/* Logo */
+
+#poweredby {
+    position: absolute;
+    bottom: 55px;
+    right: 20px;
+    z-index: 15000;
+    height: 79px;
+    width: 395px;
+    background: url(images/logo.png) no-repeat;
+    /* IE 5-7 */
+    filter: alpha(opacity=70);
+    /* Netscape */
+    -moz-opacity: 0.7;
+    /* Safari 1.x */
+    -khtml-opacity: 0.7;
+    /* Good browsers */
+    opacity: 0.7;
+}
+#link-credits {
+    position: absolute;
+    bottom: 40px;
+    right: 20px;
+    color: #FFF;
+    font: 12px tahoma, arial, verdana, sans-serif;
+    text-decoration: none;
+}
+/* The simple background image PNG does not work in IE6-8, but does in IE9 */
+
+.x-ie6 #poweredby div, .x-ie7 #poweredby div, .x-ie8 #poweredby div {
+    background-image: none;
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/logo.png', sizingMethod='scale');
+}
+.blue .x-grid-cell {
+    background-color: #d6e9f7;
+    color: #060606;
+}
+.red .x-grid-cell {
+    background-color: #f8c0d1;
+    color: #060606;
+}
+.x-fieldset-header-default>.x-fieldset-header-text {
+    position: static;
+}
+.x-fieldset {
+    overflow: visible;
+}
