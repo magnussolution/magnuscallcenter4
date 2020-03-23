@@ -3,7 +3,7 @@ clear
 echo
 echo
 echo
-echo "=================================WWW.MAGNUSCALLCENTER.COM===================================";
+echo "=================================WWW.MAGNUSSOLUTION.COM===================================";
 echo "_      _                                ____      			                              ";
 echo "|\    /|                               | ___|      _   _ 	                                  ";
 echo "| \  / | ___  ____  _ __  _   _  _____ | |    ___ | | | |	  ___  ____ _ __  _____ ____ ___  ";
@@ -16,39 +16,61 @@ echo "																		                      ";
 echo "============================ OPENSOURCE SYSTEM TO CALLCENTER ===============================";
 echo
 
-unset HISTFILE
-if [ -z "$1" ]; then
-  echo "Using ./install.sh ip sub-domain";
-  exit
-fi
-
-if [ -z "$2" ]; then
-  echo "Using ./install.sh ip sub-domain";
-  exit
-fi
-
-
 
 sleep 3
-unset HISTFILE
 
-ip=$1
-domain=$2
-
+VERSION='4'
 
 sed 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config > borra && mv -f borra /etc/selinux/config
+
+
+echo
+echo '----------- Install MagnusCallcenter dependences ----------'
+echo
+sleep 1
+clear
+
+echo '[mariadb]
+name = MariaDB
+baseurl = http://yum.mariadb.org/10.1/centos7-amd64
+gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+gpgcheck=1' > /etc/yum.repos.d/MariaDB.repo 
+
 yum clean all
-yum -y install wget kernel-devel.`uname -m` 
+yum -y install kernel-devel.`uname -m` epel-release
+yum -y install http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+yum -y install yum-utils gcc.`uname -m` gcc-c++.`uname -m` make.`uname -m` git.`uname -m` wget.`uname -m` bison.`uname -m` openssl-devel.`uname -m` ncurses-devel.`uname -m` doxygen.`uname -m` newt-devel.`uname -m` mlocate.`uname -m` lynx.`uname -m` tar.`uname -m` wget.`uname -m` nmap.`uname -m` bzip2.`uname -m` mod_ssl.`uname -m` speex.`uname -m` speex-devel.`uname -m` unixODBC.`uname -m` unixODBC-devel.`uname -m` libtool-ltdl.`uname -m` sox libtool-ltdl-devel.`uname -m` flex.`uname -m` screen.`uname -m` autoconf automake libxml2.`uname -m` libxml2-devel.`uname -m` sqlite* subversion
+yum-config-manager --enable remi-php71
+yum -y install php.`uname -m` php-cli.`uname -m` php-devel.`uname -m` php-gd.`uname -m` php-mbstring.`uname -m` php-pdo.`uname -m` php-xml.`uname -m` php-xmlrpc.`uname -m` php-process.`uname -m` php-posix libuuid uuid uuid-devel libuuid-devel.`uname -m`
+yum -y install jansson.`uname -m` jansson-devel.`uname -m` unzip.`uname -m` ntpd
+yum -y install mysql mariadb-server  mariadb-devel mariadb php-mysql mysql-connector-odbc
+yum -y install xmlstarlet libsrtp libsrtp-devel dmidecode gtk2-devel binutils-devel svn libtermcap-devel libtiff-devel audiofile-devel cronie cronie-anacron
+yum -y install perl perl-libwww-perl perl-LWP-Protocol-https perl-JSON cpan flac libcurl-devel nss
+yum -y install libpcap-devel autoconf automake git ncurses-devel mpg123 sox cpan
 
 
+clear
+echo
+echo '----------- Download MagnusCallcenter $VERSION  ----------'
+echo
+sleep 1
 mkdir -p /var/www/html/callcenter
 cd /var/www/html
 git clone https://github.com/magnussolution/magnuscallcenter4.git callcenter
 
 
-VERSION='4'
-
-
+echo
+echo '----------- Install PJPROJECT ----------'
+echo
+sleep 1
+cd /usr/src
+wget http://www.digip.org/jansson/releases/jansson-2.7.tar.gz
+tar -zxvf jansson-2.7.tar.gz
+cd jansson-2.7
+./configure
+make clean
+make && make install
+ldconfig
 
 
 clear
@@ -90,7 +112,7 @@ make samples
 make config
 ldconfig
 
-
+clear
 
 echo '
 noload => chan_sip.so
@@ -99,30 +121,10 @@ noload => chan_sip.so
 usermod -aG audio,dialout asterisk
 chown -R asterisk.asterisk /etc/asterisk
 chown -R asterisk.asterisk /var/{lib,log,spool}/asterisk
-
+chmod -R 777 /tmp
 
 systemctl start asterisk
 
-
-echo
-echo '----------- Install MagnusCallcenter dependences ----------'
-echo
-sleep 1
-clean
-echo '[mariadb]
-name = MariaDB
-baseurl = http://yum.mariadb.org/10.1/centos7-amd64
-gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
-gpgcheck=1' > /etc/yum.repos.d/MariaDB.repo 
-yum -y install epel-release 
-yum -y install gcc.`uname -m` gcc-c++.`uname -m` make.`uname -m` git.`uname -m` wget.`uname -m` bison.`uname -m` openssl-devel.`uname -m` ncurses-devel.`uname -m` doxygen.`uname -m` newt-devel.`uname -m` mlocate.`uname -m` lynx.`uname -m` tar.`uname -m` wget.`uname -m` nmap.`uname -m` bzip2.`uname -m` mod_ssl.`uname -m` speex.`uname -m` speex-devel.`uname -m` unixODBC.`uname -m` unixODBC-devel.`uname -m` libtool-ltdl.`uname -m` sox libtool-ltdl-devel.`uname -m` flex.`uname -m` screen.`uname -m` autoconf automake libxml2.`uname -m` libxml2-devel.`uname -m` sqlite* subversion
-yum -y install php.`uname -m` php-cli.`uname -m` php-devel.`uname -m` php-gd.`uname -m` php-mbstring.`uname -m` php-pdo.`uname -m` php-xml.`uname -m` php-xmlrpc.`uname -m` php-process.`uname -m` php-posix libuuid uuid uuid-devel libuuid-devel.`uname -m`
-yum -y install jansson.`uname -m` jansson-devel.`uname -m` unzip.`uname -m`
-yum -y install mysql mariadb-server  mariadb-devel mariadb php-mysql mysql-connector-odbc
-yum -y install xmlstarlet libsrtp libsrtp-devel dmidecode gtk2-devel binutils-devel svn libtermcap-devel libtiff-devel audiofile-devel cronie cronie-anacron
-yum -y install mpg123 perl perl-libwww-perl sox cpan
-yum -y install perl-LWP-Protocol-https
-yum -y install perl-JSON flac
 
 
 systemctl enable httpd.service && systemctl enable mariadb
@@ -181,12 +183,7 @@ password = $password
 pre-connect = yes
 " > /etc/asterisk/res_odbc.conf
 
-: "
-Test mysql connection
 
-isql -v magnuscallcenter-connector root $password
-
-"
 
 
 echo "
@@ -304,6 +301,8 @@ sed -i "s/User apache/User asterisk/" /etc/httpd/conf/httpd.conf
 sed -i "s/Group apache/Group asterisk/" /etc/httpd/conf/httpd.conf
 sed -i "s/\;date.timezone =/date.timezone = America\/Sao_Paulo/" /etc/php.ini
 
+rm -f /etc/localtime
+ln -s /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
 
 systemctl restart  httpd
 
@@ -316,9 +315,6 @@ echo
 sleep 2
 
 cd /var/www/html/callcenter
-
-echo '----upload callcenter----'
-
 chown -R asterisk:asterisk /var/www/html/callcenter
 touch /etc/asterisk/extensions_magnus.conf
 touch /etc/asterisk/pjsip_magnus.conf
@@ -703,91 +699,17 @@ mv /usr/local/src/backup* /usr/local/src/magnus/backup
 chown -R asterisk:asterisk /usr/local/src/magnus/
 chmod -R 755 /usr/local/src/magnus/
 chmod +x /var/www/html/callcenter/protected/commands/clean_asterisk_logs.sh
-
+chown -R asterisk:asterisk /var/spool/asterisk/outgoing/
 chmod 750 /var/www/html/callcenter/tmp
 chmod 750 /var/www/html/callcenter/resources/sounds
 chmod 770 /var/www/html/callcenter/resources/images
 rm -rf /var/www/html/callcenter/doc
 
 clear
-echo
-echo '----------- Install the SSL certificated ----------'
-echo
-sleep 3 
 
 
 
 
-
-set_timezone ()
-{ 
-  #yum -y install ntp
-  directory=/usr/share/zoneinfo
-  for (( l = 0; l < 5; l++ )); do
-
-    echo "entrar no diretorio $directory"
-    cd $directory
-    files=("")  
-
-    i=0
-    s=65    # decimal ASCII "A" 
-    for f in *
-    do
-
-      if [[ "$i" = "0" && "$l" = "0" ]]; then
-        files[i]="BRASIL Brasilia"
-        files[i+1]=""
-      else
-        files[i]="$f"
-          files[i+1]=""
-      fi      
-        ((i+=2))
-        ((s++))
-    done
-
-    files[i+1]="MAIN MENU"
-    files[i+2]="Back to main menu"
-
-    zone=$(whiptail --title "Restore Files" --menu "Please select your timezone" 20 60 12 "${files[@]}" 3>&1 1>&2 2>&3)
-
-
-    if [ "$zone" = "BRASIL Brasilia" ]; then
-      echo "é um arquivo, setar timezone BRASIL"
-      directory=$directory/America/Sao_Paulo  
-      break
-    fi
-
-    directory=$directory/$zone
-
-
-    if [ -f "$directory" ]; then
-      #echo "é um arquivo, setar timezone"
-      break
-    fi
-
-    if [ "$zone" = "MAIN MENU" ]; then
-      directory=/usr/share/zoneinfo
-      l=0
-    fi
-
-    if test -z "$zone"; then
-      break
-    fi  
-
-    echo fim do loop
-
-  done
-
-  if [ -f "$directory" ]; then    
-    rm -f /etc/localtime
-    ln -s $directory /etc/localtime
-    phptimezone="${directory//\/usr\/share\/zoneinfo\//}"
-    phptimezone="${phptimezone////\/}"
-    sed -i '/date.timezone/s/= .*/= '$phptimezone'/' /etc/php.ini
-    systemctl reload httpd
-  fi
-
-}
 
 p4_proc()
 {
@@ -795,50 +717,50 @@ p4_proc()
 
     if [ "$4" == "Celeron" ]; then
 
-        wget http://asterisk.hosting.lv/bin/codec_g723-ast14-gcc4-glibc-pentium.so   
-        wget http://asterisk.hosting.lv/bin/codec_g729-ast14-gcc4-glibc-pentium.so
-        cp /usr/src/codec_g723-ast14-gcc4-glibc-pentium.so /usr/lib/asterisk/modules/codec_g723.so
-        cp /usr/src/codec_g729-ast14-gcc4-glibc-pentium.so /usr/lib/asterisk/modules/codec_g729.so
+        wget http://asterisk.hosting.lv/bin/codec_g723-ast160-gcc4-glibc-pentium.so   
+        wget http://asterisk.hosting.lv/bin/codec_g729-ast160-gcc4-glibc-pentium.so
+        cp /usr/src/codec_g723-ast160-gcc4-glibc-pentium.so /usr/lib/asterisk/modules/codec_g723.so
+        cp /usr/src/codec_g729-ast160-gcc4-glibc-pentium.so /usr/lib/asterisk/modules/codec_g729.so
          
         return 0;
     fi
 
-    wget http://asterisk.hosting.lv/bin/codec_g723-ast130-gcc4-glibc-pentium4.so   
-    wget http://asterisk.hosting.lv/bin/codec_g729-ast130-gcc4-glibc-pentium4.so
-    mv /usr/src/codec_g723-ast130-gcc4-glibc-pentium4.so  /usr/lib/asterisk/modules/codec_g723.so
-    mv codec_g729-ast130-gcc4-glibc-pentium4.so /usr/lib/asterisk/modules/codec_g729.so            
+    wget http://asterisk.hosting.lv/bin/codec_g723-ast160-gcc4-glibc-pentium4.so   
+    wget http://asterisk.hosting.lv/bin/codec_g729-ast160-gcc4-glibc-pentium4.so
+    mv /usr/src/codec_g723-ast160-gcc4-glibc-pentium4.so  /usr/lib/asterisk/modules/codec_g723.so
+    mv codec_g729-ast160-gcc4-glibc-pentium4.so /usr/lib/asterisk/modules/codec_g729.so            
 
 }
 p4_x64_proc()
 {         
-    wget http://asterisk.hosting.lv/bin/codec_g723-ast130-gcc4-glibc-x86_64-pentium4.so
-    wget http://asterisk.hosting.lv/bin/codec_g729-ast130-gcc4-glibc-x86_64-pentium4.so
-    mv /usr/src/codec_g723-ast130-gcc4-glibc-x86_64-pentium4.so /usr/lib/asterisk/modules/codec_g723.so
-    mv /usr/src/codec_g729-ast130-gcc4-glibc-x86_64-pentium4.so /usr/lib/asterisk/modules/codec_g729.so
+    wget http://asterisk.hosting.lv/bin/codec_g723-ast160-gcc4-glibc-x86_64-pentium4.so
+    wget http://asterisk.hosting.lv/bin/codec_g729-ast160-gcc4-glibc-x86_64-pentium4.so
+    mv /usr/src/codec_g723-ast160-gcc4-glibc-x86_64-pentium4.so /usr/lib/asterisk/modules/codec_g723.so
+    mv /usr/src/codec_g729-ast160-gcc4-glibc-x86_64-pentium4.so /usr/lib/asterisk/modules/codec_g729.so
       
 }
 p3_proc()
 {       
     set $(grep "model name" /proc/cpuinfo);
     if [ "$4" == "Intel(R)" &&  "$5" == "Pentium(R)" && "$6"== "III" ];then
-        wget http://asterisk.hosting.lv/bin/codec_g723-ast130-gcc4-glibc-pentium.so   
-        wget http://asterisk.hosting.lv/bin/codec_g729-ast130-gcc4-glibc-pentium.so
-        mv /usr/src/codec_g723-ast130-gcc4-glibc-pentium.so /usr/lib/asterisk/modules/codec_g723.so
-        mv /usr/src/codec_g729-ast130-gcc4-glibc-pentium.so /usr/lib/asterisk/modules/codec_g729.so
+        wget http://asterisk.hosting.lv/bin/codec_g723-ast160-gcc4-glibc-pentium.so   
+        wget http://asterisk.hosting.lv/bin/codec_g729-ast160-gcc4-glibc-pentium.so
+        mv /usr/src/codec_g723-ast160-gcc4-glibc-pentium.so /usr/lib/asterisk/modules/codec_g723.so
+        mv /usr/src/codec_g729-ast160-gcc4-glibc-pentium.so /usr/lib/asterisk/modules/codec_g729.so
         return 0;
     fi
-    wget http://asterisk.hosting.lv/bin/codec_g723-ast130-gcc4-glibc-pentium3.so
-    wget http://asterisk.hosting.lv/bin/codec_g729-ast130-gcc4-glibc-pentium3.so
-    mv /usr/src/codec_g723-ast130-gcc4-glibc-pentium3.so /usr/lib/asterisk/modules/codec_g723.so
-    mv /usr/src/codec_g729-ast130-gcc4-glibc-pentium3.so /usr/lib/asterisk/modules/codec_g729.so
+    wget http://asterisk.hosting.lv/bin/codec_g723-ast160-gcc4-glibc-pentium3.so
+    wget http://asterisk.hosting.lv/bin/codec_g729-ast160-gcc4-glibc-pentium3.so
+    mv /usr/src/codec_g723-ast160-gcc4-glibc-pentium3.so /usr/lib/asterisk/modules/codec_g723.so
+    mv /usr/src/codec_g729-ast160-gcc4-glibc-pentium3.so /usr/lib/asterisk/modules/codec_g729.so
 
 }
 AMD_proc()
 {
-    wget http://asterisk.hosting.lv/bin/codec_g729-ast130-gcc4-glibc-athlon-sse.so
-    wget http://asterisk.hosting.lv/bin/codec_g723-ast130-gcc4-glibc-athlon-sse.so
-    mv /usr/src/codec_g723-ast130-gcc4-glibc-athlon-sse.so /usr/lib/asterisk/modules/codec_g723.so
-    mv /usr/src/codec_g729-ast130-gcc4-glibc-athlon-sse.so /usr/lib/asterisk/modules/codec_g729.so
+    wget http://asterisk.hosting.lv/bin/codec_g729-ast160-gcc4-glibc-athlon-sse.so
+    wget http://asterisk.hosting.lv/bin/codec_g723-ast160-gcc4-glibc-athlon-sse.so
+    mv /usr/src/codec_g723-ast160-gcc4-glibc-athlon-sse.so /usr/lib/asterisk/modules/codec_g723.so
+    mv /usr/src/codec_g729-ast160-gcc4-glibc-athlon-sse.so /usr/lib/asterisk/modules/codec_g729.so
 
 }
 

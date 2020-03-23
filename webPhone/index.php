@@ -7,6 +7,7 @@ $server = preg_replace("/www\./", "", $server);
     window.localStorage.setItem('org.doubango.identity.impu', 'sip:'+user+'@<?php echo $server ?>');
     window.localStorage.setItem('org.doubango.identity.realm', '<?php echo $server ?>');
     window.localStorage.setItem('org.doubango.expert.websocket_server_url', 'wss://<?php echo $server ?>:8089/ws');
+    window.localStorage.setItem('org.doubango.expert.ice_servers', '[]');
 </script>
 
 <!DOCTYPE html>

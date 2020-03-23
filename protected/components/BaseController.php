@@ -365,8 +365,7 @@ class BaseController extends CController
 
     private function showAdminLog()
     {
-        //if(Yii::app()->session['isAdmin'] == true && isset($_GET['log'])){
-        if (isset($_GET['log'])) {
+        if (Yii::app()->session['isAdmin'] == true && isset($_GET['log'])) {
             echo '<pre>';
             print_r($this->paramsFilter);
 

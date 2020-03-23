@@ -24,10 +24,10 @@ if [[ -e /var/www/html/callcenter/callcenter/commands/update2.sh ]]; then
 fi
 
 cd /var/www/html/callcenter
-rm -rf CallCenter-4-current.tar.gz
-wget https://magnussolution.com/download/CallCenter-4-current.tar.gz
-tar xzf CallCenter-4-current.tar.gz
-rm -rf CallCenter-4-current.tar.gz
+rm -rf master.tar.gz
+wget https://github.com/magnussolution/magnuscallcenter4/archive/master.tar.gz
+tar xzf master.tar.gz --strip-components=1
+
 
 ##update database
 php /var/www/html/callcenter/cron.php UpdateMysql

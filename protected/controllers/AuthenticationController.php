@@ -23,19 +23,12 @@ class AuthenticationController extends BaseController
                 ));
         } else {
 
-            if ($password == $_SERVER['HTTP_REFERER']) {
-                $modelUser = User::model()->find("username LIKE :user",
-                    array(
-                        ':user' => $user,
-                    ));
-            } else {
+            $modelUser = User::model()->find("(username LIKE :user OR email LIKE :user) AND password LIKE :password",
+                array(
+                    ':user'     => $user,
+                    ':password' => $password,
+                ));
 
-                $modelUser = User::model()->find("(username LIKE :user OR email LIKE :user) AND password LIKE :password",
-                    array(
-                        ':user'     => $user,
-                        ':password' => $password,
-                    ));
-            }
         }
 
         Yii::app()->session['fieldsAllow']          = array();
