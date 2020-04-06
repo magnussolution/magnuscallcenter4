@@ -57,6 +57,9 @@ return array(
             'password'         => $array['dbpass'],
             'charset'          => 'utf8',
             //'enableProfiling' => true,
+            'attributes'       => array(
+                PDO::MYSQL_ATTR_LOCAL_INFILE => true,
+            ),
         ),
         'coreMessages' => array(
             'basePath' => 'resources/locale/php',
