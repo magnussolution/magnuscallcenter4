@@ -328,7 +328,7 @@ class PredictiveCommand extends ConsoleCommand
                         }
                     }
 
-                    PhoneNumber::model()->updateByPk($phone->id, array('status' => 0));
+                    PhoneNumber::model()->updateByPk($phone->id, array('status' => 0, 'last_trying_number' => $phone->last_trying_number));
 
                     $extension = $destination;
 

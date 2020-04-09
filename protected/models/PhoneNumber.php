@@ -51,12 +51,14 @@ class PhoneNumber extends Model
                     vizinho1,telefone_vizinho1,vizinho2,telefone_vizinho2,
                     vizinho3,telefone_vizinho3,beneficio_especie,valor_proposta,valor_parcela', 'length', 'max' => 60),
             array('number, state, country, mobile, number_home, number_office, zip_code', 'length', 'max' => 30),
-            array('profesion, datebackcall, email,email2,email3,address, creationdate,
+            array('profesion, datebackcall, email,email2,email3, creationdate,
                     neighborhood,credit_card_name, credit_card_number', 'length', 'max' => 50),
             array('sexo, sessiontime,address_number, credit_card_code', 'length', 'max' => 10),
             array('cpf', 'length', 'max' => 15),
             array('info, company, birth_date, type_user, mobile_2, option_1, option_2, option_3, option_4, option_5,
                  option_6, option_7, option_8', 'length', 'max' => 100),
+            array('address', 'length', 'max' => 150),
+
         );
     }
 
