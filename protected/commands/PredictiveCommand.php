@@ -318,6 +318,8 @@ class PredictiveCommand extends ConsoleCommand
                             case '5':
                                 $destination = $phone->number_office;
                                 break;
+                            default:
+                                break;
                         }
 
                         if (!is_numeric($destination) || strlen($destination) < 8) {
@@ -333,7 +335,7 @@ class PredictiveCommand extends ConsoleCommand
                     $extension = $destination;
 
                     if (!is_numeric($destination) || strlen($destination) < 8) {
-                        $log = $this->debug >= 1 ? MagnusLog::writeLog(LOGFILE, ' line:' . __LINE__ . " Temtamos todos os numeros e ja nao tem mais nenhum" . $phone->id . ' ' . $phone->last_trying_number) : null;
+                        $log = $this->debug >= 1 ? MagnusLog::writeLog(LOGFILE, ' line:' . __LINE__ . " Temtamos todos os numeros e ja nao tem mais nenhum. PHONE->ID =" . $phone->id . ' last_trying_number=' . $phone->last_trying_number) : null;
                         continue;
                     }
                     $log = $this->debug >= 1 ? MagnusLog::writeLog(LOGFILE, ' line:' . __LINE__ . " ID=" . $phone->id . ' - Destination' . $destination . ', last_trying_number=' . $phone->last_trying_number) : null;

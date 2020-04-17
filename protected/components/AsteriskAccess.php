@@ -203,6 +203,7 @@ class AsteriskAccess
                     $line .= "type = auth\n";
                     $line .= "password = " . $data['secret'] . "\n";
                     $line .= "username = " . $data['user'] . "\n";
+                    $line .= "contact_user = " . $data['user'] . "\n";
                 }
 
                 if (strlen($data['user']) && strlen($data['secret'])) {
@@ -516,7 +517,7 @@ class AsteriskAccess
                     $line .= "type = aor\n";
                     $line .= "max_contacts = 1\n";
                     $line .= "remove_existing = yes\n";
-                    $line .= "qualify_frequency = 120\n";
+                    $line .= "qualify_frequency = 60\n";
 
                     $line .= "\n[" . $data['name'] . "]\n";
                     $line .= "type = auth\n";
