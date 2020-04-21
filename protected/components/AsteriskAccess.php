@@ -198,16 +198,11 @@ class AsteriskAccess
                     $line .= "outbound_auth = auth_reg_" . $data[$head_field] . '_' . $data['user'] . '_' . $data['host'] . "\n";
                     $line .= "client_uri = sip:" . $data['user'] . '@' . $data['host'] . "\n";
                     $line .= "server_uri = sip:" . $data['host'] . "\n";
-
-                    $line .= "\n[auth_reg_" . $data[$head_field] . '_' . $data['user'] . '_' . $data['host'] . "]\n";
-                    $line .= "type = auth\n";
-                    $line .= "password = " . $data['secret'] . "\n";
-                    $line .= "username = " . $data['user'] . "\n";
                     $line .= "contact_user = " . $data['user'] . "\n";
                 }
 
                 if (strlen($data['user']) && strlen($data['secret'])) {
-                    $line .= "\n[" . $data[$head_field] . "]\n";
+                    $line .= "\n[auth_reg_" . $data[$head_field] . '_' . $data['user'] . '_' . $data['host'] . "]\n";
                     $line .= "type = auth\n";
                     $line .= "username = " . $data['user'] . "\n";
                     $line .= "password = " . $data['secret'] . "\n";
@@ -249,8 +244,8 @@ class AsteriskAccess
                     $line .= "from_domain = " . $data['fromdomain'] . "\n";
                 }
                 if (strlen($data['user']) && strlen($data['secret'])) {
-                    $line .= "auth = " . $data[$head_field] . "\n";
-                    $line .= "outbound_auth = " . $data[$head_field] . "\n";
+                    $line .= "auth = auth_reg_" . $data[$head_field] . '_' . $data['user'] . '_' . $data['host'] . "\n";
+                    $line .= "outbound_auth = auth_reg_" . $data[$head_field] . '_' . $data['user'] . '_' . $data['host'] . "\n";
                 }
 
                 if (fwrite($fd, $line) === false) {
