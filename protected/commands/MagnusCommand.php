@@ -107,7 +107,7 @@ class MagnusCommand extends CConsoleCommand
                     case 1:
                         $mode      = 'Call to Operator';
                         $modelUser = User::model()->findByPk((int) $result_did[0]['id_user']);
-                        $dialstr   = 'SIP/' . $modelUser->username;
+                        $dialstr   = 'PJSIP/' . $modelUser->username;
                         $agi->verbose("DIAL $dialstr", 6);
                         $myres        = $MAGNUS->run_dial($agi, $dialstr);
                         $answeredtime = $agi->get_variable("ANSWEREDTIME");

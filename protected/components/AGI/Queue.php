@@ -56,7 +56,7 @@ class Queue
             $MAGNUS->hangup();
         }
 
-        $sql = "SELECT * FROM pkg_phonenumber WHERE number = '" . $MAGNUS->destination . "' AND
+        $sql = "SELECT * FROM pkg_phonenumber WHERE number = '" . $MAGNUS->CallerID . "' AND
                     id_phonebook IN (SELECT id_phonebook FROM pkg_campaign_phonebook WHERE
                     id_campaign = " . $campaignResult[0]['id'] . ")";
         $agi->verbose($sql);
@@ -70,31 +70,31 @@ class Queue
                         VALUES (:id_phonebook, :number, 1, 0)";
             $command = Yii::app()->db->createCommand($sql);
             $command->bindValue(":id_phonebook", $resultPhoneBook[0]['id_phonebook'], PDO::PARAM_INT);
-            $command->bindValue(":number", $MAGNUS->destination, PDO::PARAM_STR);
+            $command->bindValue(":number", $MAGNUS->CallerID, PDO::PARAM_STR);
             $command->execute();
             $idPhoneNumber = Yii::app()->db->lastInsertID;
         }
         $aleatorio = str_replace(" ", "", microtime(true));
 
-        $sql = "INSERT INTO pkg_predictive VALUES (NULL, '" . $MAGNUS->uniqueid . "', '" . $idPhoneNumber . "', NULL)";
+        $sql = "INSERT INTO pkg_predictive (id_campaign, uniqueid, number) VALUES (" . $campaignResult[0]['id'] . ", '" . $MAGNUS->uniqueid . "', '" . $idPhoneNumber . "')";
         $agi->verbose($sql);
         Yii::app()->db->createCommand($sql)->execute();
 
         //salvamos os dados da chamada gerada
-        $sql = "INSERT INTO pkg_preditive_gen (date, uniqueID,id_phonebook,ringing_time) VALUES ('" . time() . "', " . $MAGNUS->uniqueid . ", " . $resultPhoneBook[0]['id_phonebook'] . ",0)";
+        $sql = "INSERT INTO pkg_predictive_gen (date, uniqueID,id_phonebook,ringing_time) VALUES ('" . time() . "', " . $MAGNUS->uniqueid . ", " . $resultPhoneBook[0]['id_phonebook'] . ",0)";
         $agi->verbose($sql);
         Yii::app()->db->createCommand($sql)->execute();
 
         $startTime = strtotime("now");
-        $agi->set_variable("CALLERID(num)", $agi->get_variable("CALLED", true));
-        $agi->set_callerid($agi->get_variable("CALLED", true));
+        $agi->set_variable("CALLERID(num)", $MAGNUS->CallerID);
+        $agi->set_callerid($MAGNUS->CallerID);
 
         $agi->verbose('Receptivo - Send call to Campaign ' . $campaignResult[0]['name'], 5);
         //SET uniqueid para ser atualizado a tabela pkg_predictive quando a ligação for atendida
         $agi->set_variable("UNIQUEID", $MAGNUS->uniqueid);
 
-        $agi->set_variable("CALLERID", $MAGNUS->destination);
-        $agi->set_variable("CALLED", $MAGNUS->destination);
+        $agi->set_variable("CALLERID", $MAGNUS->CallerID);
+        $agi->set_variable("CALLED", $MAGNUS->CallerID);
         $agi->set_variable("PHONENUMBER_ID", $idPhoneNumber);
         $agi->set_variable("IDPHONEBOOK", $resultPhoneBook[0]['id_phonebook']);
         $agi->set_variable("CAMPAIGN_ID", $campaignResult[0]['id']);
@@ -102,7 +102,6 @@ class Queue
         $agi->set_variable("ALEARORIO", $aleatorio);
 
         $agi->execute("Queue", $campaignResult[0]['name'] . ',,,,60,/var/www/html/callcenter/agi.php');
-
         if ($MAGNUS->agiconfig['record_call'] == 1 || $MAGNUS->record_call == 1) {
             $myres = $agi->execute("StopMixMonitor");
             $agi->verbose("EXEC StopMixMonitor (" . $MAGNUS->uniqueid . ")", 5);
@@ -135,12 +134,11 @@ class Queue
         $agi->verbose($sql, 25);
 
         $MAGNUS->id_user = $userResult[0]['id'];
-
-        $trunk       = explode("-", substr($MAGNUS->channel, 4));
+        $agi->verbose(print_r($trunk, true) . ' ' . $MAGNUS->channel);
         $sql         = "SELECT id FROM pkg_trunk WHERE trunkcode LIKE '" . $trunk[0] . "'";
         $trunkResult = Yii::app()->db->createCommand($sql)->queryAll();
 
-        $Calc->usedtrunk                          = $trunkResult[0]['id'];
+        $Calc->usedtrunk                          = is_numeric($trunkResult[0]['id']) ? $trunkResult[0]['id'] : null;
         $Calc->tariffObj[0]['id_campaign_number'] = $campaignResult[0]['id'];
 
         $Calc->tariffObj[0]['id_phonebook'] = $resultPhoneBook[0]['id_phonebook'];
