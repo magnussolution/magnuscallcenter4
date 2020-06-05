@@ -121,6 +121,8 @@ class Queue
 
         $agi->verbose(print_r($linha, true), 1);
 
+        $linha[4] = isset($linha[4]) ? $linha[4] : '';
+
         $agi->verbose(date("Y-m-d H:i:s") . " => $MAGNUS->dnid, " . $MAGNUS->uniqueid . " DELIGOU A CHAMADAS teste teste", 1);
 
         $endTime = strtotime("now");
@@ -145,7 +147,7 @@ class Queue
         $Calc->tariffObj[0]['id']           = $idPhoneNumber;
 
         $terminatecauseid = $Calc->answeredtime > 0 ? 1 : 0;
-        $Calc->updateSystem($MAGNUS, $agi, $MAGNUS->dnid, $terminatecauseid);
+        $Calc->updateSystem($MAGNUS, $agi, $MAGNUS->CallerID . '-' . $linha[4], $terminatecauseid);
     }
 
     public function queueMassivaCall($agi, &$MAGNUS, &$Calc, $modelCampaign, $idPhoneNumber)

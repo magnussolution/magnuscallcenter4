@@ -80,6 +80,11 @@ class Calc
         } else {
             $id_category = "NULL";
         }
+
+        if (!is_numeric($this->usedtrunk)) {
+            $this->usedtrunk = "NULL";
+        }
+
         $fields = "uniqueid, sessionid, id_category,  id_user, id_campaign, id_phonebook, id_phonenumber, id_trunk, starttime, stoptime, sessiontime, calledstation, terminatecauseid, real_sessiontime, dnid";
         $value  = "'$MAGNUS->uniqueid', '$MAGNUS->channel', $id_category, $MAGNUS->id_user, $id_campaign_number, $id_phonebook, $id_phonenumber, $this->usedtrunk, SUBDATE(CURRENT_TIMESTAMP, INTERVAL $sessiontime SECOND), now(), '$sessiontime', '$calledstation', '$terminatecauseid', '$this->real_answeredtime', '$MAGNUS->dnid'";
 

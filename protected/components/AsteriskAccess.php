@@ -218,6 +218,7 @@ class AsteriskAccess
                 if ($data['qualify'] > 29) {
                     $line .= "qualify_frequency = " . $data['qualify'] . "\n";
                 }
+                $line .= "max_contacts = 1\n";
 
                 $line .= "\n[" . $data[$head_field] . "]\n";
                 $line .= "type = identify\n";

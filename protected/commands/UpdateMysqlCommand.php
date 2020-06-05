@@ -696,6 +696,17 @@ context spycall {
             $this->executeDB($sql);
         }
 
+        if ($version == '4.1.3') {
+
+            $sql = "INSERT INTO pkg_configuration VALUES (NULL, 'Categoria para bloquear números recebidos', 'category_to_block', '', 'ID da categoria para nao aceitar chamadas entrantes. Padrao vazio', 'global', '1');
+            ";
+            $this->executeDB($sql);
+
+            $version = '4.1.4';
+            $sql     = "UPDATE pkg_configuration SET config_value = '" . $version . "' WHERE config_key = 'version' ";
+            $this->executeDB($sql);
+        }
+
     }
     //sudo php /Users/macbookpro/Documents/html/CallCenter_4/cron.php  updatemysql
     private function executeDB($sql)

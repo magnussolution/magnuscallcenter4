@@ -103,6 +103,17 @@ class MagnusCommand extends CConsoleCommand
             $result_did = Yii::app()->db->createCommand($sql)->queryAll();
 
             if (count($result_did) > 0) {
+
+                $sql = "SELECT * FROM pkg_phonenumber WHERE number = '" . $MAGNUS->CallerID . "' AND
+                    id_campaign = " . $MAGNUS->config['global']['category_to_block'] . ")";
+                $agi->verbose($sql);
+                $resultPhoneNumber = Yii::app()->db->createCommand($sql)->queryAll();
+
+                if (isset($resultPhoneNumber[0]) > 0) {
+                    $agi->verbose("Number $MAGNUS->CallerID was blocked because have blocked category");
+                    $MAGNUS->hangup($agi);
+                }
+
                 switch ($result_did[0]['voip_call']) {
                     case 1:
                         $mode      = 'Call to Operator';
