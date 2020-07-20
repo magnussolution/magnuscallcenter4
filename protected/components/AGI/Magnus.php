@@ -247,11 +247,11 @@ class Magnus
 
         $translation = "0/55,*/5511/8,*/5511/9";
 
-        $regexs = split(",", $translation);
+        $regexs = preg_split("/,/", $translation);
 
         foreach ($regexs as $key => $regex) {
 
-            $regra   = split('/', $regex);
+            $regra   = preg_split("/\//", $regex);
             $grab    = $regra[0];
             $replace = isset($regra[1]) ? $regra[1] : '';
             $digit   = isset($regra[2]) ? $regra[2] : '';

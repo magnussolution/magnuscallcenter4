@@ -18,14 +18,11 @@ class CdrSummaryController extends BaseController
             SUM(case when sessiontime>0 then 1 else 0 end) as success_calls, starttime,
             SUM(CASE WHEN id_category = 11 then 1 else 0 end) as categoriacion_completa,
             SUM(sessiontime) / COUNT(*) AS aloc_all_calls,
-            SUM(sessiontime) / SUM(CASE WHEN sessiontime > 0  THEN 1 ELSE 0 END) AS aloc_success_calls,
-            c.username AS idUserusername,
-            pkg_trunk.trunkcode AS idTrunktrunkcode
+            SUM(sessiontime) / SUM(CASE WHEN sessiontime > 0  THEN 1 ELSE 0 END) AS aloc_success_calls
             ';
-    public $join = 'JOIN pkg_user c ON t.id_user = c.id
-                            JOIN pkg_trunk ON t.id_trunk = pkg_trunk.id
-                            JOIN pkg_campaign ON t.id_campaign = pkg_campaign.id
-                            JOIN pkg_phonebook ON t.id_phonebook = pkg_phonebook.id';
+    public $join = ' JOIN pkg_category c ON t.id_category = c.id
+                JOIN pkg_campaign ON t.id_campaign = pkg_campaign.id
+                JOIN pkg_phonebook ON t.id_phonebook = pkg_phonebook.id';
 
     public function init()
     {
@@ -163,8 +160,6 @@ class CdrSummaryController extends BaseController
             $attributes[$i]['nbcall']                 = $models[$i]->nbcall;
             $attributes[$i]['success_calls']          = $models[$i]->success_calls;
             $attributes[$i]['categoriacion_completa'] = $models[$i]->categoriacion_completa;
-            $attributes[$i]['idUserusername']         = $models[$i]->idUserusername;
-            $attributes[$i]['idTrunktrunkcode']       = $models[$i]->idTrunktrunkcode;
         }
         return $attributes;
     }

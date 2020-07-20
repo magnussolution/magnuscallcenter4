@@ -186,6 +186,9 @@ class CdrController extends BaseController
         if (isset($columns[0]['dataIndex']) && $columns[0]['dataIndex'] == 'id') {
             unset($columns[0]);
         }
+
+        $columns[] = array('header' => 'Operador', 'dataIndex' => 'id_user');
+
         return $columns;
     }
 
