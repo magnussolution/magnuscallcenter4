@@ -397,6 +397,15 @@ class sysinfo
                 }
             }
 
+            $results['ram']['total']   = isset($results['ram']['total']) && is_numeric($results['ram']['total']) ? $results['ram']['total'] : 1;
+            $results['ram']['t_free']  = isset($results['ram']['t_free']) && is_numeric($results['ram']['t_free']) ? $results['ram']['t_free'] : 1;
+            $results['ram']['t_used']  = isset($results['ram']['t_used']) && is_numeric($results['ram']['t_used']) ? $results['ram']['t_used'] : 1;
+            $results['ram']['cached']  = isset($results['ram']['cached']) && is_numeric($results['ram']['cached']) ? $results['ram']['cached'] : 1;
+            $results['ram']['buffers'] = isset($results['ram']['buffers']) && is_numeric($results['ram']['buffers']) ? $results['ram']['buffers'] : 1;
+
+            $results['swap']['total'] = isset($results['swap']['total']) && is_numeric($results['swap']['total']) ? $results['swap']['total'] : 1;
+            $results['swap']['free']  = isset($results['swap']['free']) && is_numeric($results['swap']['free']) ? $results['swap']['free'] : 1;
+
             $results['ram']['t_used']  = $results['ram']['total'] - $results['ram']['t_free'];
             $results['ram']['percent'] = round(($results['ram']['t_used'] * 100) / $results['ram']['total']);
             $results['swap']['used']   = $results['swap']['total'] - $results['swap']['free'];

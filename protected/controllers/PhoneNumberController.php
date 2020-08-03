@@ -225,7 +225,7 @@ class PhoneNumberController extends BaseController
         intervalTime = now - 10 minutes
          */
         $timeToCall = date('Y-m-d H:i', mktime(date('H'), date('i') - 10, date('s'), date('m'), date('d'), date('Y')));
-        Yii::log('Check number scheduled ' . "id_category = 2 AND datebackcall BETWEEN '$timeToCall' AND  NOW() AND id_user =  " . Yii::app()->session['id_user'], 'info');
+
         //verifica se tem numero agendado somente para o operadora
         $modelPhoneNumber = $this->abstractModel->findAll(array(
             'condition' => "id_category = 2 AND datebackcall BETWEEN '$timeToCall' AND  NOW() AND id_user =  " . Yii::app()->session['id_user'],

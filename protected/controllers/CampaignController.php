@@ -267,7 +267,7 @@ class CampaignController extends BaseController
 
             if (Yii::app()->session['isOperator']) {
 
-                if ($modelLoginsCampaign->idBreak->mandatory == 0) {
+                if (isset($modelLoginsCampaign->idBreak->mandatory) && $modelLoginsCampaign->idBreak->mandatory == 0) {
                     $deadline = $modelLoginsCampaign->idBreak->maximum_time;
 
                     if (strtotime($modelLoginsCampaign->starttime . ' +' . $modelLoginsCampaign->idBreak->maximum_time . ' minutes') < strtotime('now')) {
