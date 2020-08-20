@@ -54,7 +54,7 @@ class Campaign extends Model
                     allow_fone_parente1,allow_parente2,allow_fone_parente2,allow_parente3,allow_fone_parente3,
                     allow_vizinho1,allow_telefone_vizinho1,allow_vizinho2,allow_telefone_vizinho2,
                     allow_vizinho3,allow_telefone_vizinho3, allow_credit_card_code, allow_credit_card_number,
-                    allow_credit_card_type, allow_credit_card_name,
+                    allow_credit_card_type, allow_credit_card_name,max_wait_time,
 
                     timeout, retry, wrapuptime, weight,id_team,
                     periodic-announce-frequency, announce-frequency, call_limit, call_next_try, predictive', 'numerical', 'integerOnly' => true),
@@ -70,7 +70,7 @@ class Campaign extends Model
             array(' allow_option_6_type, allow_option_7_type,allow_option_8_type', 'length', 'max' => 200),
 
             array('allow_option_1, allow_option_2, allow_option_3, allow_option_4,
-                    allow_option_5, allow_option_6, allow_option_7, allow_option_8', 'length', 'max' => 100),
+                    allow_option_5, allow_option_6, allow_option_7, allow_option_8, max_wait_time_action', 'length', 'max' => 100),
 
             array('daily_morning_start_time, daily_morning_stop_time,
                     daily_afternoon_start_time, daily_afternoon_stop_time, announce-position', 'length', 'max' => 8),

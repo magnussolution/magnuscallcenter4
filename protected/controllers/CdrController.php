@@ -189,6 +189,8 @@ class CdrController extends BaseController
 
         $columns[] = array('header' => 'Operador', 'dataIndex' => 'id_user');
 
+        $columns[] = array('header' => 'Trunk', 'dataIndex' => 'id_trunk');
+
         return $columns;
     }
 

@@ -20,11 +20,11 @@
 
 class Queue
 {
-    public function callQueue($agi, &$MAGNUS, &$Calc, $result_did, $type = 'queue')
+    public function callQueue($agi, &$MAGNUS, &$Calc, $result_did, $type = 'queue', $startTime = 0)
     {
         $agi->verbose("Queue module", 5);
         $agi->answer();
-        $startTime = time();
+        $startTime = $startTime == 0 ? time() : $startTime;
 
         $MAGNUS->destination = $MAGNUS->dnid = $result_did[0]['did'];
 
@@ -85,7 +85,6 @@ class Queue
         $agi->verbose($sql);
         Yii::app()->db->createCommand($sql)->execute();
 
-        $startTime = strtotime("now");
         $agi->set_variable("CALLERID(num)", $MAGNUS->CallerID);
         $agi->set_callerid($MAGNUS->CallerID);
 
@@ -101,7 +100,9 @@ class Queue
         $agi->set_variable("STARTCALL", time());
         $agi->set_variable("ALEARORIO", $aleatorio);
 
-        $agi->execute("Queue", $campaignResult[0]['name'] . ',,,,60,/var/www/html/callcenter/agi.php');
+        $max_wait_time = $campaignResult[0]['max_wait_time'] > 0 ? $campaignResult[0]['max_wait_time'] : '';
+
+        $agi->execute("Queue", $campaignResult[0]['name'] . ',tc,,,' . $max_wait_time . ',/var/www/html/callcenter/agi.php');
         if ($MAGNUS->agiconfig['record_call'] == 1 || $MAGNUS->record_call == 1) {
             $myres = $agi->execute("StopMixMonitor");
             $agi->verbose("EXEC StopMixMonitor (" . $MAGNUS->uniqueid . ")", 5);
@@ -123,9 +124,42 @@ class Queue
 
         $linha[4] = isset($linha[4]) ? $linha[4] : '';
 
+        if ($linha[4] == 'EXITWITHTIMEOUT') {
+            if (strlen($campaignResult[0]['max_wait_time_action'])) {
+
+                $data        = explode('/', strtoupper($campaignResult[0]['max_wait_time_action']));
+                $actionType  = $data[0];
+                $destination = $data[1];
+                switch ($actionType) {
+                    case 'PJSIP':
+
+                        $dialstr = $campaignResult[0]['max_wait_time_action'];
+                        $agi->verbose("DIAL $dialstr", 6);
+                        $MAGNUS->run_dial($agi, $dialstr);
+                        break;
+                    case 'QUEUE':
+                        $sql                          = "SELECT * FROM campaign WHERE UPPER(name) = '" . strtoupper($destination) . "' LIMIT 1";
+                        $modelCampaign                = Yii::app()->db->createCommand($sql)->queryAll();
+                        $result_did[0]['id_campaign'] = $modelCampaign[0]['id'];
+
+                        Queue::callQueue($agi, $MAGNUS, $Calc, $result_did, 'queue', $startTime);
+                        $noCDR = true;
+                        break;
+                    case 'IVR':
+                        $sql = "SELECT * FROM pkg_ivr WHERE UPPER(name) = '" . strtoupper($destination) . "' LIMIT 1";
+
+                        $modelIrv = Yii::app()->db->createCommand($sql)->queryAll();
+
+                        $result_did[0]['id_ivr'] = $modelIrv[0]['id'];
+                        IvrAgi::callIvr($agi, $MAGNUS, $Calc, $result_did, 'queue', $startTime);
+                        break;
+                }
+            }
+        }
+
         $agi->verbose(date("Y-m-d H:i:s") . " => $MAGNUS->dnid, " . $MAGNUS->uniqueid . " DELIGOU A CHAMADAS teste teste", 1);
 
-        $endTime = strtotime("now");
+        $endTime = time();
 
         $Calc->answeredtime = $Calc->real_answeredtime = $endTime - $startTime;
 
@@ -145,6 +179,12 @@ class Queue
 
         $Calc->tariffObj[0]['id_phonebook'] = $resultPhoneBook[0]['id_phonebook'];
         $Calc->tariffObj[0]['id']           = $idPhoneNumber;
+
+        //chamada nao foi atendida pela queue, colocar id na categoria.
+        if (preg_match('/ABANDON|EXITEMPTY|EXITWITHTIMEOUT|QUEUESTART/', $linha[4]) || $linha[4] == '') {
+            $MAGNUS->forceIdCaterory = 3;
+            $linha[4]                = 'NOANSWER';
+        }
 
         $terminatecauseid = $Calc->answeredtime > 0 ? 1 : 0;
         $Calc->updateSystem($MAGNUS, $agi, $MAGNUS->CallerID . '-' . $linha[4], $terminatecauseid);

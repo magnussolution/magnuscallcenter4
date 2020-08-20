@@ -20,12 +20,12 @@
 
 class IvrAgi
 {
-    public function callIvr($agi, &$MAGNUS, &$Calc, $result_did, $type = 'ivr')
+    public function callIvr($agi, &$MAGNUS, &$Calc, $result_did, $type = 'ivr', $startTime = 0)
     {
         $uploaddir = $MAGNUS->magnusFilesDirectory . 'sounds/';
         $agi->verbose("Ivr module", 5);
         $agi->answer();
-        $startTime = time();
+        $startTime = $startTime == 0 ? time() : $startTime;
 
         $MAGNUS->destination = $result_did[0]['did'];
 
@@ -72,9 +72,11 @@ class IvrAgi
                 $agi->verbose('DEFAULT OPTION');
                 $option   = '10';
                 $continue = false;
-            }
-            //se marca uma opÃ§ao que esta em branco
-            else if ($modelIvr->{$optionName . $option} == '') {
+            } else if (!isset($modelIvr->{$optionName . $option})) {
+                $agi->verbose('option 77');
+                break;
+            } else if ($modelIvr->{$optionName . $option} == '') {
+                //se marca uma opÃ§ao que esta em branco
                 $agi->verbose('NUMBER INVALID');
                 $agi->stream_file('prepaid-invalid-digits', '#');
                 continue;
@@ -152,12 +154,12 @@ class IvrAgi
             } else if ($optionType == 'ivr') // QUEUE
             {
                 $result_did[0]['id_ivr'] = $optionValue;
-                IvrAgi::callIvr($agi, $MAGNUS, $Calc, $result_did, $type);
+                IvrAgi::callIvr($agi, $MAGNUS, $Calc, $result_did, $type, $startTime);
             } else if ($optionType == 'campaign') // QUEUE
             {
                 $insertCDR                    = false;
                 $result_did[0]['id_campaign'] = $optionValue;
-                Queue::callQueue($agi, $MAGNUS, $Calc, $result_did, $type);
+                Queue::callQueue($agi, $MAGNUS, $Calc, $result_did, $type, $startTime);
             } else if (preg_match("/^number/", $optionType)) //envia para um fixo ou celular
             {
                 $insertCDR = false;
