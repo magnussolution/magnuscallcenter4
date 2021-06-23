@@ -288,7 +288,11 @@ AddType application/octet-stream .csv
 
 <Files "*.log">
   deny from all
-</Files>' >> /etc/httpd/conf/httpd.conf
+</Files>
+
+MaxKeepAliveRequests 1000
+
+' >> /etc/httpd/conf/httpd.conf
 
 
 sed -i "s/memory_limit = 16M/memory_limit = 512M /" /etc/php.ini

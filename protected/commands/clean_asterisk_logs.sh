@@ -16,6 +16,7 @@ rm -rf httpd/*20[1,2][0-9]*
 
 rm -rf /var/www/html/callcenter/protected/runtime/*.log.*
 echo '' > /var/www/html/callcenter/protected/runtime/socket.log
+echo '' > /var/www/html/callcenter/protected/runtime/predictive.log
 echo '' > /var/log/AsteriskSocket.log
 echo '' > /var/log/fail2ban.log
 echo '' > /var/log/messages

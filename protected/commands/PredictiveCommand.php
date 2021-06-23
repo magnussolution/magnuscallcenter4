@@ -404,7 +404,7 @@ class PredictiveCommand extends ConsoleCommand
                     // gerar os arquivos .call
                     $call = "MaxRetries: 0\n";
                     $call .= "Channel: " . $dialstr . "\n";
-                    $call .= "CallerID:" . $extension . "\n";
+                    $call .= "Callerid:" . $modelCampaign[$i]->description . "\n";
                     //$call .= "MaxRetries: 0\n";
                     //$call .= "RetryTime: 1\n";
                     //$call .= "WaitTime: 45\n";
@@ -426,10 +426,9 @@ class PredictiveCommand extends ConsoleCommand
                     $call .= "Set:AMDtotalAnalysisTime=" . $modelTrunk->AMD_totalAnalysisTime . "000\n";
                     $call .= "Set:AMDmaximumNumberOfWords=" . $modelTrunk->AMD_maximumNumberOfWords . "\n";
                     $call .= "Archive: yes\n";
-                    $log = $this->debug >= 4 ? MagnusLog::writeLog(LOGFILE, ' line:' . __LINE__ . $call) : null;
 
                     $msg = "Enviado chamada para  $extension";
-                    echo 'LOG:' . $call . "\n";
+                    //echo 'LOG:' . $call . "\n";
                     $log = $this->debug >= 1 ? MagnusLog::writeLog(LOGFILE, ' line:' . __LINE__ . ' ' . $msg) : null;
 
                     $arquivo_call = "/tmp/$aleatorio.call";
