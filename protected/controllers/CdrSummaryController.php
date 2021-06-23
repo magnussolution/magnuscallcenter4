@@ -20,9 +20,6 @@ class CdrSummaryController extends BaseController
             SUM(sessiontime) / COUNT(*) AS aloc_all_calls,
             SUM(sessiontime) / SUM(CASE WHEN sessiontime > 0  THEN 1 ELSE 0 END) AS aloc_success_calls
             ';
-    public $join = ' JOIN pkg_category c ON t.id_category = c.id
-                JOIN pkg_campaign ON t.id_campaign = pkg_campaign.id
-                JOIN pkg_phonebook ON t.id_phonebook = pkg_phonebook.id';
 
     public function init()
     {

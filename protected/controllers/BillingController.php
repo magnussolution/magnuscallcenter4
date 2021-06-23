@@ -14,8 +14,6 @@ class BillingController extends BaseController
         'idUser'     => 'username,name',
         'idCampaign' => 'name',
     );
-    public $join = 'JOIN pkg_user c ON t.id_user = c.id
-		JOIN pkg_campaign d ON t.id_campaign = d.id';
 
     public $promedio = array();
 

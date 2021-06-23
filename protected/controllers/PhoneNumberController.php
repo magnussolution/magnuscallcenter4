@@ -11,11 +11,6 @@ class PhoneNumberController extends BaseController
     public $attributeOrder = 't.id';
     public $extraValues    = array('idPhonebook' => 'name', 'idCategory' => 'name', 'idUser' => 'name');
 
-    public $join = 'INNER JOIN pkg_phonebook ON t.id_phonebook = pkg_phonebook.id
-    INNER JOIN pkg_campaign_phonebook ON pkg_campaign_phonebook.id_phonebook = pkg_phonebook.id
-    INNER JOIN pkg_category ON t.id_category = pkg_category.id
-    ';
-
     public $fieldsFkReport = array(
         'id_phonebook' => array(
             'table'       => 'pkg_phonebook',

@@ -10,8 +10,7 @@ class CdrSumaryOperadorController extends BaseController
 {
     public $attributeOrder = 'login_type, t.turno ASC, t.id_user ASC, t.starttime ASC';
     public $group          = 't.id_user, t.id_campaign , t.turno';
-    public $join           = 'JOIN pkg_user  ON t.id_user = pkg_user.id
-                            JOIN pkg_campaign ON t.id_campaign = pkg_campaign.id';
+
     public $extraValues = array('idUser' => 'username,name', 'idCampaign' => 'name');
     public $day;
 
