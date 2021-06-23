@@ -110,7 +110,8 @@ class IvrController extends BaseController
                     if (isset($itemOption[1])) {
                         $attributes[$i]['id_' . $itemOption[0] . '_out_' . end($itemKey)] = end($itemOption);
                         if (is_numeric($itemOption[1])) {
-                            $model = $itemOption[0]::model()->findByPk(end($itemOption));
+                            $model = ucfirst($itemOption[0]);
+                            $model = $model::model()->findByPk(end($itemOption));
 
                             $attributes[$i]['id_' . $itemOption[0] . '_out_' . end($itemKey) . '_name'] = isset($model->name) ? $model->name : '';
                         } else {
@@ -131,7 +132,8 @@ class IvrController extends BaseController
                     if (isset($itemOption[1])) {
                         $attributes[$i]['id_' . $itemOption[0] . '_' . end($itemKey)] = end($itemOption);
                         if (is_numeric($itemOption[1])) {
-                            $model = $itemOption[0]::model()->findByPk(end($itemOption));
+                            $model = ucfirst($itemOption[0]);
+                            $model = $model::model()->findByPk(end($itemOption));
 
                             $attributes[$i]['id_' . $itemOption[0] . '_' . end($itemKey) . '_name'] = isset($model->name) ? $model->name : '';
                         } else {
