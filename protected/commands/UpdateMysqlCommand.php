@@ -716,6 +716,14 @@ context spycall {
             $sql     = "UPDATE pkg_configuration SET config_value = '" . $version . "' WHERE config_key = 'version' ";
             $this->executeDB($sql);
         }
+        if ($version == '4.1.5') {
+
+            exec("echo '\n*/3 * * * * php /var/www/html/callcenter/cron.php reprocessar' >> /var/spool/cron/root");
+
+            $version = '4.1.6';
+            $sql     = "UPDATE pkg_configuration SET config_value = '" . $version . "' WHERE config_key = 'version' ";
+            $this->executeDB($sql);
+        }
 
     }
     //sudo php /Users/macbookpro/Documents/html/CallCenter_4/cron.php  updatemysql
