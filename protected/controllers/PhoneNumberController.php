@@ -162,7 +162,16 @@ class PhoneNumberController extends BaseController
                     }
 
                     if (isset($background) && $background == 1) {
-                        file_get_contents($url);
+                        $arrContextOptions = array(
+                            "ssl"  => array(
+                                "verify_peer"      => false,
+                                "verify_peer_name" => false,
+                            ),
+                            "http" => array(
+                                "timeout" => 2,
+                            ),
+                        );
+                        @file_get_contents($url, false, stream_context_create($arrContextOptions));
                     } else {
                         echo $url;
                     }

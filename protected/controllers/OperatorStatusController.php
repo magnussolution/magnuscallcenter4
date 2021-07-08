@@ -127,8 +127,10 @@ class OperatorStatusController extends BaseController
                     $modelCategory = Category::model()->findByPk($this->config['global']['automatic_caterogy']);
                     if (isset($modelCategory->id) && time() - $operatorStatus->time_start_cat > $modelCategory->description) {
 
-                        //categorizar numero e liberar operador
-                        $this->categorize_automatic($operatorStatus);
+                        if (date('s') == 5 || date('s') == 10 || date('s') == 15 || date('s') == 20 || date('s') == 25 || date('s') == 30 || date('s') == 35 || date('s') == 40 || date('s') == 45 || date('s') == 50 || date('s') == 55 || date('s') == 0) {
+                            //categorizar numero e liberar operador
+                            $this->categorize_automatic($operatorStatus);
+                        }
                     }
                 }
             }

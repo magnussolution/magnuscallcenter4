@@ -1339,7 +1339,11 @@ class BaseController extends CController
                         }
 
                         $paramsIn = implode(',', $paramsIn);
-                        $condition .= " AND $field IN($paramsIn)";
+                        if (preg_match('/,/', $paramsIn)) {
+                            $condition .= " AND $field IN ($paramsIn)";
+                        } else {
+                            $condition .= " AND $field = $paramsIn";
+                        }
                     } else {
                         $value             = $value[0];
                         $operatorSubSelect = isset($f->operatorSubSelect) ? $f->operatorSubSelect : '=';
