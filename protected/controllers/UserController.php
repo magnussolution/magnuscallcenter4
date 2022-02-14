@@ -77,9 +77,12 @@ class UserController extends BaseController
 
         if ($modelUser->idGroup->idUserType->id == 2) {
 
-            $modelSip = $this->isNewRecord ?
-            new Sip :
-            Sip::model()->find('id_user =' . $modelUser->id);
+            $modelSip = $this->isNewRecord ? new Sip : Sip::model()->find('id_user =' . $modelUser->id);
+
+            if (!isset($modelSip->id)) {
+                $modelSip = new Sip;
+            }
+
             $modelSip->id_user     = $modelUser->id;
             $modelSip->accountcode = $modelSip->name = $modelSip->fromuser = $modelSip->defaultuser = $modelUser->username;
             $modelSip->allow       = 'g729,gsm,alaw,ulaw';
