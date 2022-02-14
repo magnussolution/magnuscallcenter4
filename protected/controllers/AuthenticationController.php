@@ -423,7 +423,7 @@ class AuthenticationController extends BaseController
             'webphone'             => $webphone,
             'campaign_name'        => $campaign_name,
             'campaign_open_url'    => $campaign_open_url,
-            'logo'                 => file_exists('resources/images/logo_custom') ? 'resources/images/logo_custom' : 'resources/images/logo',
+            'logo'                 => file_exists('resources/images/logo_custom.png') ? 'resources/images/logo_custom' : 'resources/images/logo',
             'pause'                => isset(Yii::app()->session['pauseTime']) ? Yii::app()->session['pauseTime'] : null,
             'noticeSignupActually' => isset(Yii::app()->session['noticeSignupActually']) ? Yii::app()->session['noticeSignupActually'] : false,
             'noticeSignupNext'     => isset(Yii::app()->session['noticeSignupNext']) ? Yii::app()->session['noticeSignupNext'] : false,
