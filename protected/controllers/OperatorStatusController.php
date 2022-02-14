@@ -296,4 +296,49 @@ class OperatorStatusController extends BaseController
         OperatorStatusManager::unPause($modelOperatorStatus->id_user, $modelCampaign, 1);
     }
 
+    public function actionSpyCall()
+    {
+
+        $sql    = "SELECT config_value FROM pkg_configuration JOIN pkg_sip on config_value = name WHERE config_key LIKE 'channel_spy' ";
+        $result = Yii::app()->db->createCommand($sql)->queryAll();
+
+        if (count($result) == 0) {
+            echo json_encode(array(
+                'success' => false,
+                'msg'     => 'Invalid SIP for spy call',
+            ));
+            exit;
+        }
+
+        $dialstr = 'SIP/' . $result[0]['config_value'];
+        // gerar os arquivos .call
+        $call = "Action: Originate\n";
+        $call .= "Channel: " . $dialstr . "\n";
+        $call .= "Callerid: " . Yii::app()->session['username'] . "\n";
+        $call .= "Context: billing\n";
+        $call .= "Extension: 5555\n";
+        $call .= "Priority: 1\n";
+        $call .= "Set:USERNAME=" . Yii::app()->session['username'] . "\n";
+        $call .= "Set:SPY=1\n";
+        $call .= "Set:CHANNELSPY=" . $_POST['channel'] . "\n";
+
+        Yii::log($call, 'info');
+        $aleatorio    = str_replace(" ", "", microtime(true));
+        $arquivo_call = "/tmp/$aleatorio.call";
+        $fp           = fopen("$arquivo_call", "a+");
+        fwrite($fp, $call);
+        fclose($fp);
+
+        touch("$arquivo_call", mktime(date("H"), date("i"), date("s") + 1, date("m"), date("d"), date("Y")));
+        chown("$arquivo_call", "asterisk");
+        chgrp("$arquivo_call", "asterisk");
+        chmod("$arquivo_call", 0755);
+        exec("mv $arquivo_call /var/spool/asterisk/outgoing/$aleatorio.call");
+
+        echo json_encode(array(
+            'success' => true,
+            'msg'     => 'Start Spy',
+        ));
+    }
+
 }
