@@ -220,7 +220,7 @@ class AuthenticationController extends BaseController
                     login_type = 'PAUSE'",
                 array(":id_user" => Yii::app()->session['id_user']));
 
-            if (count($modelLoginsCampaign) == 1) {
+            if (isset($modelLoginsCampaign->id)) {
                 $pausetime                       = strtotime($modelLoginsCampaign->starttime);
                 $stoptime                        = strtotime(date("Y-m-d H:i:s"));
                 $totalTime                       = $stoptime - $pausetime;
@@ -229,7 +229,7 @@ class AuthenticationController extends BaseController
                 unset(Yii::app()->session['pauseTime']);
             }
 
-            if (count($modelCampaign) > 0) {
+            if (isset($modelCampaign->id)) {
 
                 foreach ($modelCampaign as $field => $allow) {
                     if ($allow && strpos($field, 'allow_') !== false) {

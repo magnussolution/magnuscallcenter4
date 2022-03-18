@@ -108,6 +108,7 @@ menuselect/menuselect --enable codec_siren14  menuselect.makeopts
 contrib/scripts/get_mp3_source.sh
 make
 make install
+make config
 make samples
 make config
 ldconfig
