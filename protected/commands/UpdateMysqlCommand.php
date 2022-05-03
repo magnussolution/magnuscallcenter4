@@ -725,6 +725,16 @@ context spycall {
             $this->executeDB($sql);
         }
 
+        if ($version == '4.1.6') {
+
+            $sql = "INSERT INTO `pkg_category` (`id`, `name`, `description`, `status`, `use_in_efetiva`, `color`, `type`) VALUES ('-5', 'RECALL', NULL, '1', '0', '#ffffff', '1');";
+            $this->executeDB($sql);
+
+            $version = '4.1.7';
+            $sql     = "UPDATE pkg_configuration SET config_value = '" . $version . "' WHERE config_key = 'version' ";
+            $this->executeDB($sql);
+        }
+
     }
     //sudo php /Users/macbookpro/Documents/html/CallCenter_4/cron.php  updatemysql
     private function executeDB($sql)

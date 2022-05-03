@@ -81,6 +81,10 @@ class Calc
             $id_category = "NULL";
         }
 
+        if ($agi->get_variable("RECALL", true)) {
+            $id_category = "-5";
+        }
+
         if (!is_numeric($this->usedtrunk)) {
             $this->usedtrunk = "NULL";
         }

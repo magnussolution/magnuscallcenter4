@@ -171,6 +171,10 @@ class MagnusCommand extends CConsoleCommand
 
         }
 
+        if ($agi->get_variable("RECALL", true)) {
+            $MAGNUS->id_phonenumber = $agi->get_variable("PHONENUMBER_ID", true);
+        }
+
         $Calc = new Calc();
         $Calc->init();
 
@@ -224,9 +228,7 @@ class MagnusCommand extends CConsoleCommand
                     /* PERFORM THE CALL*/
                     $agi->verbose('Process call', 20);
                     $Calc->sendCall($MAGNUS, $agi, $MAGNUS->destination);
-
-                    $Calc->updateSystem($MAGNUS, $agi, $MAGNUS->destination);
-
+                    $Calc->updateSystem($MAGNUS, $agi, $MAGNUS->destination, 1);
                 }
                 $MAGNUS->agiconfig['use_dnid'] = 0;
             } else {

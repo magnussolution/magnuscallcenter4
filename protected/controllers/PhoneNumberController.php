@@ -76,7 +76,7 @@ class PhoneNumberController extends BaseController
                 //prende o numero adionado como base externa para poder ligar.
                 $modeUser->id_current_phonenumber = $model->id;
                 $modeUser->save();
-            } elseif (count($modelCampaign) && $modelCampaign->predictive != 1) {
+            } elseif (isset($modelCampaign->predictive) && $modelCampaign->predictive != 1) {
 
                 $modeUser->id_current_phonenumber = null;
                 $modeUser->save(); //
@@ -325,6 +325,7 @@ class PhoneNumberController extends BaseController
             $call .= "Set:CALLED=" . $destination . "\n";
             $call .= "Set:accountcode=" . Yii::app()->getSession()->get('username') . "\n";
             $call .= "Set:PHONENUMBER_ID=" . $modelPhonenumber->id . "\n";
+            $call .= "Set:RECALL=1\n";
 
             $aleatorio    = str_replace(" ", "", microtime(true));
             $arquivo_call = "/var/spool/asterisk/outgoing/$aleatorio.call";
