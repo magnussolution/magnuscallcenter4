@@ -306,6 +306,26 @@ sed -i "s/User apache/User asterisk/" /etc/httpd/conf/httpd.conf
 sed -i "s/Group apache/Group asterisk/" /etc/httpd/conf/httpd.conf
 sed -i "s/\;date.timezone =/date.timezone = America\/Sao_Paulo/" /etc/php.ini
 
+
+echo "                 
+[mysqld]
+join_buffer_size = 128M
+sort_buffer_size = 2M
+read_rnd_buffer_size = 2M
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+secure-file-priv = ''
+innodb_strict_mode  = 0
+symbolic-links=0
+sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
+max_connections = 500
+[mysqld_safe]
+log-error=/var/log/mariadb/mariadb.log
+pid-file=/var/run/mariadb/mariadb.pid
+" > /etc/my.cnf
+
+
+
 rm -f /etc/localtime
 ln -s /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
 

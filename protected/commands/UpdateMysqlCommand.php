@@ -380,6 +380,10 @@ class UpdateMysqlCommand extends ConsoleCommand
 
             $sql = "
             INSERT INTO `pkg_team` (`id`, `name`, `description`) VALUES (1, 'Principal', 'Equipe padrão');
+            ";
+            $this->executeDB($sql);
+
+            $sql = "
             ALTER TABLE `pkg_user` ADD `id_team` INT(11) NULL DEFAULT NULL AFTER `id`;
             UPDATE `pkg_user` SET `id_team` = '1';
             ALTER TABLE `pkg_user`  ADD CONSTRAINT `fk_pkg_user_team` FOREIGN KEY (`id_team`) REFERENCES `pkg_team` (`id`);
