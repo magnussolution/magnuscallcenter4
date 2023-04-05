@@ -32,9 +32,10 @@ clear
 
 echo '[mariadb]
 name = MariaDB
-baseurl = https://archive.mariadb.org/mariadb-10.2/yum/centos7-amd64/
+baseurl = https://yum.mariadb.org/10.9/centos7-amd64
 gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
-gpgcheck=1' > /etc/yum.repos.d/MariaDB.repo 
+gpgcheck=1
+sslverify=0' > /etc/yum.repos.d/MariaDB.repo 
 
 yum clean all
 yum -y install kernel-devel.`uname -m` epel-release
@@ -49,6 +50,42 @@ yum -y install perl perl-libwww-perl perl-LWP-Protocol-https perl-JSON cpan flac
 yum -y install libpcap-devel autoconf automake git ncurses-devel mpg123 sox cpan
 
 
+
+systemctl enable httpd
+systemctl enable mariadb
+systemctl start mariadb
+chkconfig ntpd on
+
+
+genpasswd() 
+{
+    length=$1
+    [ "$length" == "" ] && length=16
+    tr -dc A-Za-z0-9_ < /dev/urandom | head -c ${length} | xargs
+}
+password=$(genpasswd)
+
+if [ -e "/root/passwordMysql.log" ] && [ ! -z "/root/passwordMysql.log" ]
+then
+    password=$(awk '{print $1}' /root/passwordMysql.log)
+fi
+
+touch /root/passwordMysql.log
+echo "$password" > /root/passwordMysql.log 
+
+
+clear
+echo
+echo "----------- Creat password mysql: Your mysql root password is $password ----------"
+echo
+
+chmod -R 777 /tmp
+sleep 2
+systemctl start mariadb
+
+mysql -uroot -e "SET PASSWORD FOR 'root'@localhost = PASSWORD('${password}'); FLUSH PRIVILEGES;"
+
+
 clear
 echo
 echo '----------- Download MagnusCallcenter $VERSION  ----------'
@@ -57,6 +94,19 @@ sleep 1
 mkdir -p /var/www/html/callcenter
 cd /var/www/html
 git clone https://github.com/magnussolution/magnuscallcenter4.git callcenter
+
+
+echo
+echo "----------- Installing the new Database ----------"
+echo
+sleep 2
+CallCenterMysqlPass=$(genpasswd)
+mysql -uroot -p${password} -e "create database callcenter;"
+mysql -uroot -p${password} -e "CREATE USER 'CallCenterUser'@'localhost' IDENTIFIED BY '${CallCenterMysqlPass}';"
+mysql -uroot -p${password} -e "GRANT ALL PRIVILEGES ON \`callcenter\` . * TO 'CallCenterUser'@'localhost' WITH GRANT OPTION;FLUSH PRIVILEGES;"    
+mysql -uroot -p${password} -e "GRANT FILE ON * . * TO  'CallCenterUser'@'localhost' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;"
+
+mysql callcenter -uroot -p$password  < /var/www/html/callcenter/doc/script.sql
 
 
 echo
@@ -128,35 +178,6 @@ systemctl start asterisk
 
 
 
-systemctl enable httpd.service && systemctl enable mariadb
-
-
-genpasswd() 
-{
-    length=$1
-    [ "$length" == "" ] && length=16
-    tr -dc A-Za-z0-9_ < /dev/urandom | head -c ${length} | xargs
-}
-password=$(genpasswd)
-
-if [ -e "/root/passwordMysql.log" ] && [ ! -z "/root/passwordMysql.log" ]
-then
-    password=$(awk '{print $1}' /root/passwordMysql.log)
-fi
-
-touch /root/passwordMysql.log
-echo "$password" > /root/passwordMysql.log 
-
-
-clear
-echo
-echo "----------- Creat password mysql: Your mysql root password is $password ----------"
-echo
-
-chmod -R 777 /tmp
-sleep 2
-systemctl start mariadb
-mysqladmin -u root password $password
 
 
 
@@ -462,17 +483,7 @@ echo "#include extensions_magnus.conf" >> /etc/asterisk/extensions.conf
 
 
 
-echo
-echo "----------- Installing the new Database ----------"
-echo
-sleep 2
-CallCenterMysqlPass=$(genpasswd)
-mysql -uroot -p${password} -e "create database callcenter;"
-mysql -uroot -p${password} -e "CREATE USER 'CallCenterUser'@'localhost' IDENTIFIED BY '${CallCenterMysqlPass}';"
-mysql -uroot -p${password} -e "GRANT ALL PRIVILEGES ON \`callcenter\` . * TO 'CallCenterUser'@'localhost' WITH GRANT OPTION;FLUSH PRIVILEGES;"    
-mysql -uroot -p${password} -e "GRANT FILE ON * . * TO  'CallCenterUser'@'localhost' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;"
 
-mysql callcenter -u root -p$password  < /var/www/html/callcenter/doc/script.sql
 
 
 ln -s /var/www/html/callcenter/resources/scripts/AsteriskSoket/AsteriskSocket /etc/init.d/

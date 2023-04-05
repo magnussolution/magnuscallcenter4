@@ -39,8 +39,11 @@ case "$1" in
         ;;
     restart|force-reload)
         echo -n "Restarting $DESC: "
-        start-stop-daemon $STOP_OPTS
-        sleep 1
+        if [[ -f /var/run/AsteriskSocket.pid ]]
+        then
+            start-stop-daemon $STOP_OPTS
+            sleep 1
+        fi
         start-stop-daemon $START_OPTS >> $LOGFILE
         echo "$NAME."
         ;;
