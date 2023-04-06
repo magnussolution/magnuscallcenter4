@@ -44,4 +44,5 @@ class Provider extends Model
             array('description, credit', 'length', 'max' => 500),
         );
     }
+
 }

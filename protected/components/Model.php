@@ -25,4 +25,23 @@ class Model extends CActiveRecord
     {
         return $this->_module;
     }
+
+    public function beforeSave()
+    {
+
+        if (isset($this->creationdate) && !$this->validateDate($this->creationdate)) {
+            $this->creationdate = date('Y-m-d H:i:s');
+        } else if (isset($this->datecreation) && !$this->validateDate($this->datecreation)) {
+            $this->datecreation = date('Y-m-d H:i:s');
+        }
+
+        return parent::beforeSave();
+
+    }
+
+    public function validateDate($date, $format = 'Y-m-d H:i:s')
+    {
+        $d = DateTime::createFromFormat($format, $date);
+        return $d && $d->format($format) == $date;
+    }
 }

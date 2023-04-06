@@ -76,14 +76,13 @@ class Trunk extends Model
 
     public function beforeSave()
     {
-        $this->trunkcode  = preg_replace("/ /", "-", $this->trunkcode);
-        $this->allow      = preg_replace("/,0/", "", $this->allow);
-        $this->allow      = preg_replace("/0,/", "", $this->allow);
-        $this->providerip = $this->providertech != 'sip' && $this->providertech != 'iax2' ? $this->host : $this->trunkcode;
-
+        $this->trunkcode       = preg_replace("/ /", "-", $this->trunkcode);
+        $this->allow           = preg_replace("/,0/", "", $this->allow);
+        $this->allow           = preg_replace("/0,/", "", $this->allow);
+        $this->providerip      = $this->providertech != 'sip' && $this->providertech != 'iax2' ? $this->host : $this->trunkcode;
         $this->register_string = $this->register == 1 ? $this->register_string : '';
+        $this->failover_trunk  = $this->failover_trunk === 0 ? null : $this->failover_trunk;
 
-        $this->failover_trunk = $this->failover_trunk === 0 ? null : $this->failover_trunk;
         return parent::beforeSave();
     }
 }
